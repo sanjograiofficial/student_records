@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "frontend",
+			"path": "./frontend"
+		},
+		{
+			"name": "backend",
+			"path": "./orm"
+		},
+		{
+			"name": "react",
+			"path": "./react"
+		},
+		{
+			"path": "skill"
+		}
+	],
+	"settings": {}
+}

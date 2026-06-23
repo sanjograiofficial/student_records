@@ -1,0 +1,841 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduAdmin | Department & Teacher Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .active-tab-indicator {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        background-color: #006c49;
+        transition: all 0.3s ease;
+      }
+      /* Custom scrollbar for data-heavy sections */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f8f9ff;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              surface: "#f8f9ff",
+              "surface-tint": "#545f73",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#6ffbbe",
+              "on-tertiary": "#ffffff",
+              primary: "#091426",
+              "on-secondary-container": "#00714d",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#d3e4fe",
+              "on-surface-variant": "#45474c",
+              tertiary: "#040057",
+              "surface-variant": "#d3e4fe",
+              "on-background": "#0b1c30",
+              "tertiary-fixed": "#e1e0ff",
+              "on-primary-container": "#8590a6",
+              "surface-bright": "#f8f9ff",
+              background: "#f8f9ff",
+              "surface-container-high": "#dce9ff",
+              "surface-dim": "#cbdbf5",
+              "on-primary-fixed": "#111c2d",
+              "primary-fixed": "#d8e3fb",
+              "surface-container": "#e5eeff",
+              "on-surface": "#0b1c30",
+              "inverse-on-surface": "#eaf1ff",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#213145",
+              "on-tertiary-container": "#7f82ff",
+              "primary-container": "#1e293b",
+              "on-tertiary-fixed": "#07006c",
+              "secondary-container": "#6cf8bb",
+              "secondary-fixed-dim": "#4edea3",
+              "on-tertiary-fixed-variant": "#2f2ebe",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#002113",
+              "tertiary-container": "#0d0093",
+              error: "#ba1a1a",
+              "tertiary-fixed-dim": "#c0c1ff",
+              "surface-container-low": "#eff4ff",
+              secondary: "#006c49",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#3c475a",
+              "outline-variant": "#c5c6cd",
+              outline: "#75777d",
+              "primary-fixed-dim": "#bcc7de",
+              "inverse-primary": "#bcc7de",
+              "on-secondary-fixed-variant": "#005236",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              md: "24px",
+              "container-max": "1440px",
+              base: "4px",
+              sm: "16px",
+              gutter: "24px",
+              xs: "8px",
+              lg: "32px",
+              xl: "48px",
+            },
+            fontFamily: {
+              "body-lg": ["Inter"],
+              "headline-md": ["Inter"],
+              "headline-sm": ["Inter"],
+              "display-lg": ["Inter"],
+              "data-table": ["Inter"],
+              "label-md": ["Inter"],
+              "body-md": ["Inter"],
+            },
+            fontSize: {
+              "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "headline-md": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-sm": [
+                "20px",
+                { lineHeight: "28px", fontWeight: "600" },
+              ],
+              "display-lg": [
+                "36px",
+                {
+                  lineHeight: "44px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "data-table": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+              "label-md": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface text-on-surface font-body-md min-h-screen">
+    <!-- Side Navigation Shell -->
+    <aside
+      class="fixed left-0 top-0 h-full w-[280px] bg-primary border-r border-outline-variant shadow-sm z-50 flex flex-col"
+    >
+      <div class="px-md py-lg">
+        <h1 class="font-headline-md text-headline-md font-bold text-surface">
+          EduAdmin
+        </h1>
+        <p class="text-on-primary-container font-label-md text-label-md">
+          Management Portal
+        </p>
+      </div>
+      <nav class="flex-1 px-sm space-y-base overflow-y-auto custom-scrollbar">
+        <!-- Dashboard -->
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer active:scale-[0.98]"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="font-body-md">Dashboard</span>
+        </a>
+        <!-- Students -->
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer active:scale-[0.98]"
+          href="#"
+        >
+          <span class="material-symbols-outlined">person</span>
+          <span class="font-body-md">Students</span>
+        </a>
+        <!-- Departments (Active) -->
+        <a
+          class="flex items-center gap-sm px-md py-sm bg-primary-container text-secondary-fixed border-l-4 border-secondary-fixed transition-colors cursor-pointer active:scale-[0.98]"
+          href="#"
+        >
+          <span class="material-symbols-outlined">domain</span>
+          <span class="font-body-md">Departments</span>
+        </a>
+        <!-- Teachers (Active Logic Context - This page covers both, but we map to Teachers if selected) -->
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer active:scale-[0.98]"
+          href="#"
+        >
+          <span class="material-symbols-outlined">school</span>
+          <span class="font-body-md">Teachers</span>
+        </a>
+        <!-- Courses -->
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer active:scale-[0.98]"
+          href="#"
+        >
+          <span class="material-symbols-outlined">book</span>
+          <span class="font-body-md">Courses</span>
+        </a>
+      </nav>
+      <div class="p-sm border-t border-outline-variant/20">
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer"
+          href="#"
+        >
+          <span class="material-symbols-outlined">settings</span>
+          <span class="font-body-md">Settings</span>
+        </a>
+        <a
+          class="flex items-center gap-sm px-md py-sm text-on-primary-container hover:bg-primary-container/50 transition-colors cursor-pointer"
+          href="#"
+        >
+          <span class="material-symbols-outlined">logout</span>
+          <span class="font-body-md">Logout</span>
+        </a>
+      </div>
+    </aside>
+    <!-- Top Navigation Bar -->
+    <header
+      class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface border-b border-outline-variant shadow-sm z-40 flex items-center justify-between px-lg"
+    >
+      <div class="flex items-center gap-md flex-1">
+        <div class="relative w-full max-w-md">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+            >search</span
+          >
+          <input
+            class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-body-md focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none transition-all"
+            placeholder="Search departments, teachers, or courses..."
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="flex items-center gap-md">
+        <button
+          class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200"
+        >
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button
+          class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all duration-200"
+        >
+          <span class="material-symbols-outlined">help</span>
+        </button>
+        <div
+          class="flex items-center gap-sm pl-md border-l border-outline-variant"
+        >
+          <div class="text-right">
+            <p class="text-label-md font-bold text-primary">Admin User</p>
+            <p
+              class="text-[10px] text-on-surface-variant uppercase tracking-wider"
+            >
+              Super Administrator
+            </p>
+          </div>
+          <div
+            class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden border border-outline-variant"
+          >
+            <img
+              class="w-full h-full object-cover"
+              data-alt="A professional headshot of a corporate administrator in a modern office setting. The person is wearing a dark navy suit, reflecting the brand's authoritative and stable personality. The lighting is soft and high-key, maintaining a light-mode aesthetic. The background is a clean, blurred workspace with subtle glass partitions and neutral tones, conveying precision and high-end management."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_OTVmdEa7X6XvMly32ErCXMvcESi0RP9ID0Vo6swPhof9xgZNWsAHnRk6_qG5YAJncNgSJHYa5F-J53wXYT6h1pNLNWsDx2VM8ZRwbZNsm1GcOIWnVUnLNYi5NW1h-BzfTOAQQuwhtXuP0PDMaWNpzwZTpPxpoRS_axnI3UEHH_lMonRvZEF1-N56twxzMKcgFZY4bt5Jj53tS04cP-93DbuW0Pp2Ez6YVTBPQgLE8J0JuLrmAuFdKxSjjc4LRxa_outWm0HRX9M1"
+            />
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-[280px] mt-16 p-lg">
+      <div class="max-w-[1440px] mx-auto">
+        <!-- Page Header -->
+        <div class="mb-lg flex justify-between items-end">
+          <div>
+            <h2 class="font-display-lg text-display-lg text-primary">
+              Institution Directory
+            </h2>
+            <p class="text-on-surface-variant font-body-lg text-body-lg">
+              Manage organizational structure and academic faculty profiles.
+            </p>
+          </div>
+          <div class="flex gap-sm">
+            <button
+              class="bg-surface border border-secondary text-secondary px-md py-2 rounded-lg font-label-md text-label-md flex items-center gap-xs hover:bg-secondary-container transition-colors"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >download</span
+              >
+              EXPORT DATA
+            </button>
+            <button
+              class="bg-primary text-on-primary px-md py-2 rounded-lg font-label-md text-label-md flex items-center gap-xs hover:bg-primary-container transition-colors"
+            >
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              NEW ENTRY
+            </button>
+          </div>
+        </div>
+        <!-- Management Tabs -->
+        <div class="mb-md border-b border-outline-variant relative">
+          <div class="flex gap-lg">
+            <button
+              class="pb-sm px-xs font-label-md text-label-md text-secondary border-b-2 border-secondary transition-all"
+              id="tab-btn-departments"
+              onclick="switchTab('departments')"
+            >
+              DEPARTMENTS
+            </button>
+            <button
+              class="pb-sm px-xs font-label-md text-label-md text-on-surface-variant hover:text-primary transition-all"
+              id="tab-btn-teachers"
+              onclick="switchTab('teachers')"
+            >
+              TEACHERS
+            </button>
+          </div>
+        </div>
+        <!-- Content Areas -->
+        <div class="space-y-md" id="departments-view">
+          <!-- Bento Grid for Departments -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+            <!-- Department Card: Computer Science -->
+            <div
+              class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm hover:shadow-md transition-shadow group"
+            >
+              <div class="flex justify-between items-start mb-md">
+                <div class="p-2 bg-primary-fixed rounded-lg">
+                  <span class="material-symbols-outlined text-primary"
+                    >terminal</span
+                  >
+                </div>
+                <button
+                  class="text-outline hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">
+                Computer Science
+              </h3>
+              <p class="text-body-md text-on-surface-variant mb-md">
+                Focusing on artificial intelligence, software engineering, and
+                data structures.
+              </p>
+              <div class="grid grid-cols-2 gap-sm">
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">STUDENTS</p>
+                  <p class="text-headline-sm font-bold text-primary">1,240</p>
+                </div>
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">TEACHERS</p>
+                  <p class="text-headline-sm font-bold text-primary">42</p>
+                </div>
+              </div>
+              <div
+                class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center"
+              >
+                <span
+                  class="text-label-md text-on-secondary-container bg-secondary-container px-2 py-1 rounded"
+                  >High Growth</span
+                >
+                <a class="text-secondary font-label-md hover:underline" href="#"
+                  >View Details</a
+                >
+              </div>
+            </div>
+            <!-- Department Card: Engineering -->
+            <div
+              class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm hover:shadow-md transition-shadow group"
+            >
+              <div class="flex justify-between items-start mb-md">
+                <div class="p-2 bg-secondary-container rounded-lg">
+                  <span
+                    class="material-symbols-outlined text-on-secondary-container"
+                    >precision_manufacturing</span
+                  >
+                </div>
+                <button
+                  class="text-outline hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">
+                Engineering
+              </h3>
+              <p class="text-body-md text-on-surface-variant mb-md">
+                Mechanical, electrical, and civil engineering disciplines with
+                lab focus.
+              </p>
+              <div class="grid grid-cols-2 gap-sm">
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">STUDENTS</p>
+                  <p class="text-headline-sm font-bold text-primary">850</p>
+                </div>
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">TEACHERS</p>
+                  <p class="text-headline-sm font-bold text-primary">31</p>
+                </div>
+              </div>
+              <div
+                class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center"
+              >
+                <span
+                  class="text-label-md text-on-primary-container bg-surface-container-highest px-2 py-1 rounded"
+                  >Stable</span
+                >
+                <a class="text-secondary font-label-md hover:underline" href="#"
+                  >View Details</a
+                >
+              </div>
+            </div>
+            <!-- Department Card: Business School -->
+            <div
+              class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm hover:shadow-md transition-shadow group"
+            >
+              <div class="flex justify-between items-start mb-md">
+                <div class="p-2 bg-tertiary-fixed rounded-lg">
+                  <span class="material-symbols-outlined text-tertiary"
+                    >query_stats</span
+                  >
+                </div>
+                <button
+                  class="text-outline hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">
+                Business School
+              </h3>
+              <p class="text-body-md text-on-surface-variant mb-md">
+                Management, marketing, and finance departments with executive
+                tracks.
+              </p>
+              <div class="grid grid-cols-2 gap-sm">
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">STUDENTS</p>
+                  <p class="text-headline-sm font-bold text-primary">2,100</p>
+                </div>
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">TEACHERS</p>
+                  <p class="text-headline-sm font-bold text-primary">58</p>
+                </div>
+              </div>
+              <div
+                class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center"
+              >
+                <span
+                  class="text-label-md text-on-secondary-container bg-secondary-container px-2 py-1 rounded"
+                  >High Revenue</span
+                >
+                <a class="text-secondary font-label-md hover:underline" href="#"
+                  >View Details</a
+                >
+              </div>
+            </div>
+            <!-- Department Card: Mathematics -->
+            <div
+              class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm hover:shadow-md transition-shadow group"
+            >
+              <div class="flex justify-between items-start mb-md">
+                <div class="p-2 bg-primary-fixed rounded-lg">
+                  <span class="material-symbols-outlined text-primary"
+                    >calculate</span
+                  >
+                </div>
+                <button
+                  class="text-outline hover:text-primary transition-colors"
+                >
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+              </div>
+              <h3 class="font-headline-sm text-headline-sm text-primary mb-xs">
+                Mathematics
+              </h3>
+              <p class="text-body-md text-on-surface-variant mb-md">
+                Pure and applied mathematics covering theoretical research and
+                analytics.
+              </p>
+              <div class="grid grid-cols-2 gap-sm">
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">STUDENTS</p>
+                  <p class="text-headline-sm font-bold text-primary">420</p>
+                </div>
+                <div class="bg-surface-container-low p-sm rounded-lg">
+                  <p class="text-label-md text-on-surface-variant">TEACHERS</p>
+                  <p class="text-headline-sm font-bold text-primary">18</p>
+                </div>
+              </div>
+              <div
+                class="mt-md pt-md border-t border-outline-variant/30 flex justify-between items-center"
+              >
+                <span
+                  class="text-label-md text-on-primary-container bg-surface-container-highest px-2 py-1 rounded"
+                  >Stable</span
+                >
+                <a class="text-secondary font-label-md hover:underline" href="#"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Teachers Table View (Hidden by default) -->
+        <div class="hidden" id="teachers-view">
+          <div
+            class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden"
+          >
+            <div
+              class="p-md border-b border-outline-variant bg-surface-container-low flex justify-between items-center"
+            >
+              <h3 class="font-headline-sm text-headline-sm text-primary">
+                Faculty Roster
+              </h3>
+              <div class="flex gap-sm">
+                <select
+                  class="bg-surface border border-outline-variant rounded-lg text-body-md px-md py-2 focus:ring-secondary focus:border-secondary outline-none"
+                >
+                  <option>All Departments</option>
+                  <option>Computer Science</option>
+                  <option>Engineering</option>
+                  <option>Business School</option>
+                </select>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr
+                    class="bg-surface-container-low border-b border-outline-variant"
+                  >
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase"
+                    >
+                      Name
+                    </th>
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase"
+                    >
+                      Email
+                    </th>
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase"
+                    >
+                      Department
+                    </th>
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase"
+                    >
+                      Courses
+                    </th>
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="px-md py-sm font-label-md text-label-md text-on-surface-variant uppercase text-right"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30">
+                  <tr
+                    class="hover:bg-surface-container-low transition-colors group"
+                  >
+                    <td class="px-md py-md">
+                      <div class="flex items-center gap-sm">
+                        <div
+                          class="w-10 h-10 rounded-full bg-primary-fixed-dim border border-outline-variant overflow-hidden"
+                        >
+                          <img
+                            class="w-full h-full object-cover"
+                            data-alt="A medium close-up of a distinguished professor in a classroom setting. The professor is wearing professional business casual attire. The background features a large white whiteboard with complex architectural diagrams and equations. The lighting is crisp and even, mirroring the light-mode UI style of the management portal."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcgu9PcoTeVIZNnzBZttJs5hzj7YJtisSb7HcRdXayx1O_twmveQ-17m1upuSpkH3e1AsoAtZ98vSrf8qCGNYA4lVTxmkW6N79M14_TXpVuyEcqDS3ItIrF2kNvj5-Mb0Cua_kdy7rg9YNjJWjusGZ3xMNlcbXBgpBdlY3GFzNsBDwEQUu02gxYK5EKChgwxN3L2wTjMBLDdevsc27l30Lll7A16utPkHmMI7zZgKpLnEAsF3Cc6W4ImeRPrRZwtqXCSVvF3fTRNr7"
+                          />
+                        </div>
+                        <div>
+                          <p class="font-body-md font-bold text-primary">
+                            Dr. Julianne Mercer
+                          </p>
+                          <p class="text-label-md text-on-surface-variant">
+                            Senior Lecturer
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="px-md py-md text-body-md text-on-surface-variant"
+                    >
+                      j.mercer@eduadmin.edu
+                    </td>
+                    <td class="px-md py-md">
+                      <span class="text-body-md text-primary"
+                        >Computer Science</span
+                      >
+                    </td>
+                    <td class="px-md py-md">
+                      <div class="flex flex-wrap gap-1">
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >CS101</span
+                        >
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >AI_ADV</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-md py-md">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-on-secondary-container bg-secondary-container/30 px-2.5 py-1 rounded-full text-label-md"
+                      >
+                        <span
+                          class="w-1.5 h-1.5 rounded-full bg-secondary"
+                        ></span>
+                        Active
+                      </span>
+                    </td>
+                    <td class="px-md py-md text-right">
+                      <button
+                        class="p-2 text-outline hover:text-secondary hover:bg-secondary-container/20 rounded-lg transition-all"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >edit</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr
+                    class="hover:bg-surface-container-low transition-colors group"
+                  >
+                    <td class="px-md py-md">
+                      <div class="flex items-center gap-sm">
+                        <div
+                          class="w-10 h-10 rounded-full bg-secondary-fixed-dim border border-outline-variant overflow-hidden"
+                        >
+                          <img
+                            class="w-full h-full object-cover"
+                            data-alt="A portrait of a young, energetic university teacher in a creative laboratory. The setting includes technical equipment and high-tech tools in the background. The teacher is smiling and wearing a smart grey polo shirt. The scene is bright and airy, consistent with a modern corporate educational platform's aesthetic."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuATUxWJrpMQyb-k1XTzngokrmYdgUe904w4ZAwIy9poEkZY6l_DCNl98pTsGBEbJUC-3a1e1fJb4Gv1MKtt9EtKPK_0rV69FjT5N1KWjoNten1G6mo04Q6kA_bw7Nkphd0vEauVXfqx6CsY6hdbjRAPuD6aVlvcBRjkhk7HHXX8VjhNBMNPycQ8dJYQtyK50SooD85KAUa141lHcsQs5EeZ7MvcV80RZlkFwP3hCK6b8vXrhOnt44Tf7mTPjnd_uueEVp5WIqnYLDJ2"
+                          />
+                        </div>
+                        <div>
+                          <p class="font-body-md font-bold text-primary">
+                            Marcus Sterling
+                          </p>
+                          <p class="text-label-md text-on-surface-variant">
+                            Associate Professor
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="px-md py-md text-body-md text-on-surface-variant"
+                    >
+                      m.sterling@eduadmin.edu
+                    </td>
+                    <td class="px-md py-md">
+                      <span class="text-body-md text-primary">Engineering</span>
+                    </td>
+                    <td class="px-md py-md">
+                      <div class="flex flex-wrap gap-1">
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >ENG_302</span
+                        >
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >ROBO_2</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-md py-md">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-on-secondary-container bg-secondary-container/30 px-2.5 py-1 rounded-full text-label-md"
+                      >
+                        <span
+                          class="w-1.5 h-1.5 rounded-full bg-secondary"
+                        ></span>
+                        Active
+                      </span>
+                    </td>
+                    <td class="px-md py-md text-right">
+                      <button
+                        class="p-2 text-outline hover:text-secondary hover:bg-secondary-container/20 rounded-lg transition-all"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >edit</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                  <tr
+                    class="hover:bg-surface-container-low transition-colors group"
+                  >
+                    <td class="px-md py-md">
+                      <div class="flex items-center gap-sm">
+                        <div
+                          class="w-10 h-10 rounded-full bg-tertiary-fixed-dim border border-outline-variant overflow-hidden"
+                        >
+                          <img
+                            class="w-full h-full object-cover"
+                            data-alt="A professional headshot of a business school professor in a clean, high-end office. The individual is wearing a sophisticated black blazer over a white shirt. The background consists of modern shelving with books and architectural models. The lighting is soft and directed, creating a premium professional look suitable for an enterprise SaaS."
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5_9HYqNsTIZfl4Vvn1v4Kf_RBjvYelqqSXb1AKhmQCm1f6wnB46KIxkg83rHyr4dm526K5gu4LEkeNpURTKWRh2L3FTOUOpsk521z-D8AJD6hnCg4sOKJS0GJyxrDre_gHcR6ElrMMwtlXHVFS38luJ_IE4iLY6kpoNjcAc4qtlvk5V57rjJI5DwbCVJaiz0hXgrdlXvUEOp9rrYei8zBdqTQygRqjK0VdKerQeUhzbTKfgt7k12HIQlUehIKrf2Oe_9Xp3ZyeGA4"
+                          />
+                        </div>
+                        <div>
+                          <p class="font-body-md font-bold text-primary">
+                            Sarah Chen
+                          </p>
+                          <p class="text-label-md text-on-surface-variant">
+                            Department Head
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      class="px-md py-md text-body-md text-on-surface-variant"
+                    >
+                      s.chen@eduadmin.edu
+                    </td>
+                    <td class="px-md py-md">
+                      <span class="text-body-md text-primary"
+                        >Business School</span
+                      >
+                    </td>
+                    <td class="px-md py-md">
+                      <div class="flex flex-wrap gap-1">
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >MGT_500</span
+                        >
+                        <span
+                          class="bg-primary-fixed text-on-primary-fixed text-[10px] px-2 py-0.5 rounded-full"
+                          >ECON_A</span
+                        >
+                      </div>
+                    </td>
+                    <td class="px-md py-md">
+                      <span
+                        class="inline-flex items-center gap-1.5 text-on-error-container bg-error-container/30 px-2.5 py-1 rounded-full text-label-md"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                        On Leave
+                      </span>
+                    </td>
+                    <td class="px-md py-md text-right">
+                      <button
+                        class="p-2 text-outline hover:text-secondary hover:bg-secondary-container/20 rounded-lg transition-all"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >edit</span
+                        >
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="p-md border-t border-outline-variant bg-surface flex justify-between items-center"
+            >
+              <p class="text-label-md text-on-surface-variant">
+                Showing 1-3 of 149 faculty members
+              </p>
+              <div class="flex gap-xs">
+                <button
+                  class="p-1 border border-outline-variant rounded hover:bg-surface-container-low transition-colors disabled:opacity-50"
+                  disabled=""
+                >
+                  <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button
+                  class="p-1 border border-outline-variant rounded hover:bg-surface-container-low transition-colors"
+                >
+                  <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Floating Action Button Contextually (Home/Dashboard only logic applied, but showing for Demo of high-end UI) -->
+    <!-- Suppressed on specific detail pages as per instructions -->
+    <script>
+      function switchTab(view) {
+        const departmentsView = document.getElementById("departments-view");
+        const teachersView = document.getElementById("teachers-view");
+        const deptBtn = document.getElementById("tab-btn-departments");
+        const teacherBtn = document.getElementById("tab-btn-teachers");
+
+        if (view === "departments") {
+          departmentsView.classList.remove("hidden");
+          teachersView.classList.add("hidden");
+
+          deptBtn.classList.add("text-secondary", "border-secondary");
+          deptBtn.classList.remove("text-on-surface-variant");
+
+          teacherBtn.classList.remove("text-secondary", "border-secondary");
+          teacherBtn.classList.add("text-on-surface-variant");
+        } else {
+          departmentsView.classList.add("hidden");
+          teachersView.classList.remove("hidden");
+
+          teacherBtn.classList.add("text-secondary", "border-secondary");
+          teacherBtn.classList.remove("text-on-surface-variant");
+
+          deptBtn.classList.remove("text-secondary", "border-secondary");
+          deptBtn.classList.add("text-on-surface-variant");
+        }
+      }
+    </script>
+  </body>
+</html>

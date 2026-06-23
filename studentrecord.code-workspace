@@ -4,16 +4,12 @@
 			"path": "."
 		},
 		{
-			"name": "frontend",
-			"path": "./frontend"
-		},
-		{
 			"name": "backend",
-			"path": "./orm"
+			"path": "./backend"
 		},
 		{
 			"name": "react",
-			"path": "./react"
+			"path": "./frontend"
 		},
 		{
 			"path": "skill"

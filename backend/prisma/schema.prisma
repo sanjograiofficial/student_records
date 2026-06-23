@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client-js"
+  // output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Students {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  name         String
+  email        String        @unique
+  rollNo       Int           @map("roll_no")
+  departmentId Int           @map("department_id")
+  department   Department    @relation(fields: [departmentId], references: [id])
+  // one student may have multiple course enrollments
+  enrollments  Enrollments[]
+
+  // if want to change table name
+  @@map("students")
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  name      String     @unique
+  // one dep has many students and teachers
+  students  Students[]
+  teachers  Teacher[]
+
+  @@map("department")
+}
+
+model Teacher {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  name         String
+  email        String     @unique
+  departmentId Int        @map("department_id")
+  department   Department @relation(fields: [departmentId], references: [id])
+  // one teacher may teach many courses
+  courses      Course[]
+
+  @@map("teacher")
+}
+
+model Course {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  name        String
+  credit      Float
+  teacherId   Int           @map("teacher_id")
+  teachers    Teacher       @relation(fields: [teacherId], references: [id])
+  enrollments Enrollments[]
+
+  @@map("course")
+}
+
+model Enrollments {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  studentId  Int      @map("student_id")
+  student    Students @relation(fields: [studentId], references: [id])
+  courseId   Int      @map("course_id")
+  course     Course   @relation(fields: [courseId], references: [id])
+  enrolledAt DateTime @default(now()) @map("enrolled_at")
+  status     String   @default("Active")
+
+  @@unique([studentId, courseId])
+  @@map("enrollments")
+}
+
+model Products {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  price     Float
+
+  @@map("products")
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  email     String   @unique
+
+  @@map("users")
+}

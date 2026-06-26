@@ -1,3 +1,4 @@
+import e from "express";
 import prisma from "../db/db.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import {
@@ -10,6 +11,7 @@ import {
   updateStudentService,
 } from "../services/students.service.js";
 import { validateAllFieldTypes } from "../validators/fieldValidators.js";
+import { nameValidatorSchema } from "../validators/validator.js";
 
 const getAllStudents = asyncHandler(async (req, res) => {
   let allStudents = await getAllStudentsService();
@@ -44,7 +46,19 @@ const getStudentById = asyncHandler(async (req, res) => {
     data: matchStudent,
   });
 });
-const createStudent = async (req, res) => {
+const createStudent = async (req, res, next) => {
+  // parse body data using zod validator schema
+  let result = nameValidatorSchema.safeParse(req.body);
+  if (!result.success) {
+    let errors = result.error.errors.map((e) => {
+      return { path: e.path };
+    });
+    res.status(400).json({
+      message: "Something went wrong",
+      error: errors,
+    });
+  }
+  console.log(result);
   let data = req.body;
   let createdStudent = await createStudentService(data);
   res.status(201).json({

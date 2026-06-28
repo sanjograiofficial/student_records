@@ -23,7 +23,13 @@ const getCourseByIdService = async (id) => {
 
 const createCourseService = async (data) => {
   return await prisma.course.create({
-    data,
+    data: {
+      name,
+      credit,
+      teachers: {
+        connect: { id: Number(teacherId) },
+      },
+    },
   });
 };
 

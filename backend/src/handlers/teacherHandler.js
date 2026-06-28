@@ -7,7 +7,11 @@ import {
   getTeacherByIdService,
   updateTeacherService,
 } from "../services/teachers.service.js";
-import { validateAllFieldTypes } from "../validators/fieldValidators.js";
+import {
+  createTeacherValidationSchema,
+  idValidator,
+  updateTeacherValidationSchema,
+} from "../validators/validator.js";
 
 const getAllTeachers = asyncHandler(async (req, res) => {
   let allTeachers = await getAllTeachersService();
@@ -18,17 +22,8 @@ const getAllTeachers = asyncHandler(async (req, res) => {
   });
 });
 const getTeacherById = asyncHandler(async (req, res) => {
+  idValidator.parse(Number(req.params.id));
   let { id } = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
   let matchTeacher = await getTeacherByIdService(Number(id));
   res.status(200).json({
     message: "Teacher found",
@@ -36,20 +31,8 @@ const getTeacherById = asyncHandler(async (req, res) => {
   });
 });
 const createTeacher = async (req, res) => {
+  createTeacherValidationSchema.parse(req.body);
   let data = req.body;
-  // let { name, email } = data;
-  // let validateMsg = validateAllFieldTypes("email", email);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
-  // validateMsg = validateAllFieldTypes("name", name);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
   let createdTeacher = await createTeacherService(data);
   res.status(201).json({
     message: "Teacher created successfully",
@@ -57,19 +40,10 @@ const createTeacher = async (req, res) => {
   });
 };
 const updateTeacher = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
+  updateTeacherValidationSchema.parse(req.body);
   let data = req.body;
-  let { name, email } = req.body;
   let updatedTeacher = await updateTeacherService(Number(id), data);
   res.status(200).json({
     message: "Teacher updated successfully",
@@ -77,17 +51,8 @@ const updateTeacher = async (req, res) => {
   });
 };
 const deleteTeacher = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
   let deletedTeacher = await deleteTeacherService(Number(id));
   res.status(200).json({
     message: "Teacher deleted successfully",

@@ -1,26 +1,30 @@
 import { Prisma } from "@prisma/client";
+import z from "zod";
 
 const errorHandler = (err, req, res, next) => {
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (err) {
+    switch (err.code) {
       case "P2002":
         return res.status(409).json({
           message: "A record with this value already exists",
         });
-        break;
-
       case "P2025":
         return res.status(404).json({
           message: "Record not found",
         });
-        break;
-
-    //   case "P2022":
-    //     return res.status(404).json({
-    //       message: "No student found with that id",
-    //     });
-    //     break;
     }
+  }
+  if (err instanceof z.ZodError) {
+    let errors = err.issues.map((err) => {
+      return {
+        field: err.path[0],
+        message: err.message,
+      };
+    });
+    res.status(400).json({
+      message: "Validation failed",
+      errors,
+    });
   }
   return res.status(res.statusCode === 200 ? 500 : res.statusCode).json({
     message: err.message || "Internal Server Error",

@@ -7,7 +7,11 @@ import {
   getDepartmentByIdService,
   updateDepartmentService,
 } from "../services/department.service.js";
-import { validateAllFieldTypes } from "../validators/fieldValidators.js";
+import {
+  createDepartmentValidationSchema,
+  idValidator,
+  updateDepartmentValidationSchema,
+} from "../validators/validator.js";
 
 const getAllDepartments = asyncHandler(async (req, res) => {
   let allDepartments = await getAllDepartmentsService();
@@ -19,17 +23,8 @@ const getAllDepartments = asyncHandler(async (req, res) => {
   });
 });
 const getDepartmentById = asyncHandler(async (req, res) => {
+  idValidator.parse(Number(req.params.id));
   let { id } = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
   let matchDepartment = await getDepartmentByIdService(Number(id));
   res.status(200).json({
     message: "Department found",
@@ -37,20 +32,8 @@ const getDepartmentById = asyncHandler(async (req, res) => {
   });
 });
 const createDepartment = async (req, res) => {
+  createDepartmentValidationSchema.parse(req.body);
   let data = req.body;
-  // let { name, email } = data;
-  // let validateMsg = validateAllFieldTypes("email", email);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
-  // validateMsg = validateAllFieldTypes("name", name);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
   let createdDepartment = await createDepartmentService(data);
   res.status(201).json({
     message: "Department created successfully",
@@ -58,17 +41,9 @@ const createDepartment = async (req, res) => {
   });
 };
 const updateDepartment = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
+  updateDepartmentValidationSchema.parse(req.body);
   let data = req.body;
   let { name, email } = req.body;
   let updatedDepartment = await updateDepartmentService(Number(id), data);
@@ -78,17 +53,8 @@ const updateDepartment = async (req, res) => {
   });
 };
 const deleteDepartment = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
   let deletedDepartment = await deleteDepartmentService(Number(id));
   res.status(200).json({
     message: "Department deleted successfully",

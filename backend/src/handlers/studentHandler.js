@@ -10,8 +10,10 @@ import {
   getStudentByIdService,
   updateStudentService,
 } from "../services/students.service.js";
-import { validateAllFieldTypes } from "../validators/fieldValidators.js";
-import { nameValidatorSchema } from "../validators/validator.js";
+import {
+  createStudentWithDepartmentValidationSchema,
+  updateStudentValidationSchema,
+} from "../validators/validator.js";
 
 const getAllStudents = asyncHandler(async (req, res) => {
   let allStudents = await getAllStudentsService();
@@ -29,17 +31,8 @@ const getAllStudentsWithSelect = async (req, res) => {
   });
 };
 const getStudentById = asyncHandler(async (req, res) => {
+  idValidator.parse(Number(req.params.id));
   let { id } = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
   let matchStudent = await getStudentByIdService(Number(id));
   res.status(200).json({
     message: "Student found",
@@ -48,17 +41,7 @@ const getStudentById = asyncHandler(async (req, res) => {
 });
 const createStudent = async (req, res, next) => {
   // parse body data using zod validator schema
-  let result = nameValidatorSchema.safeParse(req.body);
-  if (!result.success) {
-    let errors = result.error.errors.map((e) => {
-      return { path: e.path };
-    });
-    res.status(400).json({
-      message: "Something went wrong",
-      error: errors,
-    });
-  }
-  console.log(result);
+  nameValidatorSchema.safeParse(req.body);
   let data = req.body;
   let createdStudent = await createStudentService(data);
   res.status(201).json({
@@ -67,6 +50,7 @@ const createStudent = async (req, res, next) => {
   });
 };
 const createStudentWithDepartment = async (req, res) => {
+  createStudentWithDepartmentValidationSchema.parse(req.body);
   let data = req.body;
   let createdStudent = await createStudentWithDepartmentService(data);
   res.status(201).json({
@@ -75,19 +59,10 @@ const createStudentWithDepartment = async (req, res) => {
   });
 };
 const updateStudent = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
+  updateStudentValidationSchema.parse(req.body);
   let data = req.body;
-  let { name, email, departmentId } = req.body;
   let updatedStudent = await updateStudentService(Number(id), data);
   res.status(200).json({
     message: "Student updated successfully",
@@ -95,17 +70,8 @@ const updateStudent = async (req, res) => {
   });
 };
 const deleteStudent = async (req, res) => {
-  let id = req.params;
-  if (id == "") {
-    return res.status(400).json({
-      error: "Id cannot be empty",
-    });
-  }
-  if (isNaN(id)) {
-    return res.status(400).json({
-      error: "Id must be a number",
-    });
-  }
+  idValidator.parse(Number(req.params.id));
+  let { id } = req.params;
   let deletedStudent = await deleteStudentService(Number(id));
   res.status(200).json({
     message: "Student deleted successfully",

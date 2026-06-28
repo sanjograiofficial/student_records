@@ -1,8 +1,12 @@
 import prisma from "../db/db.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
-import { createUserService, deleteUserService, getAllUsersService, getUserByIdService, updateUserService } from "../services/users.service.js";
-
-import { validateAllFieldTypes } from "../validators/fieldValidators.js";
+import {
+  createUserService,
+  deleteUserService,
+  getAllUsersService,
+  getUserByIdService,
+  updateUserService,
+} from "../services/users.service.js";
 
 const getAllUsers = asyncHandler(async (req, res) => {
   let allUsers = await getAllUsersService();
@@ -14,6 +18,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
   });
 });
 const getUserById = asyncHandler(async (req, res) => {
+  idValidator.parse(Number(req.params.id));
   let { id } = req.params;
   if (id == "") {
     return res.status(400).json({
@@ -33,19 +38,6 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 const createUser = async (req, res) => {
   let data = req.body;
-  // let { name, email } = data;
-  // let validateMsg = validateAllFieldTypes("email", email);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
-  // validateMsg = validateAllFieldTypes("name", name);
-  // if (validateMsg != null) {
-  //   return res.status(400).json({
-  //     error: validateMsg,
-  //   });
-  // }
   let createdUser = await createUserService(data);
   res.status(201).json({
     message: "User created successfully",
@@ -91,10 +83,4 @@ const deleteUser = async (req, res) => {
   });
 };
 
-export {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-};
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser };

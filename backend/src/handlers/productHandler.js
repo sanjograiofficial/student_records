@@ -1,7 +1,6 @@
 import prisma from "../db/db.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import { createProductService, deleteProductService, getAllProductsService, getProductByIdService, updateProductService } from "../services/products.service.js";
-import { validateAllFieldTypes } from "../validators/fieldValidators.js";
 
 const getAllProducts = asyncHandler(async (req, res) => {
   let allProducts = await getAllProductsService();

@@ -4,6 +4,7 @@ import teacherRouter from "./teacherRouter.js";
 import courseRouter from "./courseRouter.js";
 import enrollmentRouter from "./enrollmentRouter.js";
 import departmentRouter from "./departmentRouter.js";
+import authRouter from "./authRouter.js";
 
 let router = Router();
 
@@ -15,5 +16,6 @@ router.use("/teacher", teacherRouter);
 router.use("/course", courseRouter);
 router.use("/department", departmentRouter);
 router.use("/enroll", enrollmentRouter);
+router.use("/auth", authRouter);
 
 export default router;

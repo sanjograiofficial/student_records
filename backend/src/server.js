@@ -35,12 +35,12 @@ app.use((req, res, next) => {
 
 // app.use(checkXRoleHeaderMiddleWare);
 
-app.use("/apikey", checkAPIKeyInHeader, (req, res) => {
-  res.status(200).json({
-    message: "Api key called",
-    data: req.headers["x-api-key"],
-  });
-});
+// app.use("/apikey", checkAPIKeyInHeader, (req, res) => {
+//   res.status(200).json({
+//     message: "Api key called",
+//     data: req.headers["x-api-key"],
+//   });
+// });
 
 let port = process.env.PORT || 8000;
 
@@ -49,27 +49,27 @@ app.get("/", (req, res) => {
     message: "Server started",
   });
 });
-app.get("/cerr", (req, res, next) => {
-  try {
-    throw new Error("fahh");
-  } catch (e) {
-    next(e);
-  }
-});
-app.get("/cdata", (req, res, next) => {
-  next({
-    msg: "All data fetched",
-    data: ["apple", "bananana"],
-    trace: {
-      method: "GET",
-      route: "/cdata",
-    },
-  });
-});
-app.use(customSuccessMiddleware);
+// app.get("/cerr", (req, res, next) => {
+//   try {
+//     throw new Error("fahh");
+//   } catch (e) {
+//     next(e);
+//   }
+// });
+// app.get("/cdata", (req, res, next) => {
+//   next({
+//     msg: "All data fetched",
+//     data: ["apple", "bananana"],
+//     trace: {
+//       method: "GET",
+//       route: "/cdata",
+//     },
+//   });
+// });
+// app.use(customSuccessMiddleware);
 app.use("/", routes);
 
-app.use(customError);
+// app.use(customError);
 app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server started at port: ${port}. http://localhost:${port}`);

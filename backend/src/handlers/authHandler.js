@@ -7,7 +7,8 @@ import {
 import prisma from "../db/db.js";
 import jwt from "jsonwebtoken";
 import { id } from "zod/v4/locales";
-import 'dotenv/config'
+import "dotenv/config";
+import { success } from "zod";
 
 export let registerUser = asyncHandler(async (req, res) => {
   registerUserValidationSchema.parse(req.body);
@@ -18,6 +19,14 @@ export let registerUser = asyncHandler(async (req, res) => {
       email: email,
       username: username,
       password: hashedPassword,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+      role: true,
     },
   });
   return res.status(201).json({
@@ -31,7 +40,7 @@ export let loginUser = asyncHandler(async (req, res) => {
   let user = await prisma.users.findUnique({
     where: {
       email: email,
-    },
+    }, 
   });
   if (!user) {
     res.status(401);
@@ -42,14 +51,17 @@ export let loginUser = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Invalid email or password");
   }
-  const token = jwt.sign(
+  const token = await jwt.sign(
     {
       id: user.id,
+      email: user.email
     },
     process.env.JWT_SECRET_KEY,
     { expiresIn: "1d" },
   );
   return res.status(200).json({
+    success: true,
     message: `Login successful.`,
+    token: token
   });
 });

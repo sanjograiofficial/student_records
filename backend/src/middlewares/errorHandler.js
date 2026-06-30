@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import z from "zod";
+import {z} from "zod";
 
 const errorHandler = (err, req, res, next) => {
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -15,13 +15,13 @@ const errorHandler = (err, req, res, next) => {
     }
   }
   if (err instanceof z.ZodError) {
-    let errors = err.issues.map((err) => {
+    const errors = err.issues.map((err) => {
       return {
         field: err.path[0],
         message: err.message,
       };
     });
-    res.status(400).json({
+    return res.status(400).json({
       message: "Validation failed",
       errors,
     });

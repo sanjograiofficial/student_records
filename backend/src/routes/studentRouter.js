@@ -11,10 +11,11 @@ import {
   getAllStudentsWithSelectService,
   sortStudentsService,
 } from "../services/students.service.js";
+import { authMiddleWare } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.get("/", getAllStudents);
+router.get("/", authMiddleWare, getAllStudents);
 router.get("/select", getAllStudentsWithSelectService);
 router.get("/sort", sortStudentsService);
 router.get("/:id", getStudentById);
